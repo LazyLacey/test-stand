@@ -9,6 +9,9 @@
     <div>
       {{ b }}
     </div>
+    <div>
+      {{ bo }}
+    </div>
   </div>
 </template>
 
@@ -25,7 +28,11 @@ export default {
     };
   },
   props: {
-    n: String,
+    n: {
+      type: String,
+      default: 'loooooool'
+    },
+    bo: Boolean
   },
   methods: {
     lol() {

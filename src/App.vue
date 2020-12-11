@@ -1,21 +1,32 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" width="25%" @click="lol" />
-    <!-- <component :is="'Lol'" :data="dataN" v-bind="propsToPass"></component> -->
 
     <div id="lol"></div>
-    
-    <ul id="props-inputs">
-      <li v-for="prop in Object.keys(propsToPass)" :key="prop">
-        <input type="text" v-model="propsToShow[prop]" />
-      </li>
-    </ul>
 
-    <ul id="data-inputs">
-      <li v-for="data in Object.keys(dataToPass)" :key="data">
-        <input type="text" v-model="dataToShow[data]" />
-      </li>
-    </ul>
+    <div class="props-inputs--wrapper">
+      <ul class="props-inputs">
+        <li v-for="prop in Object.keys(propsToPass)" :key="prop" class="list-item">
+          <div class="prop-wrapper">
+            <div class="prop-name">{{ prop }}</div>
+            <div class="prop-label">{{propTypes[prop]}}</div>
+            <input type="text" v-model="propsToShow[prop]" />
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="data-inputs--wrapper">
+      <ul class="data-inputs">
+        <li v-for="data in Object.keys(dataToPass)" :key="data" class="list-item">
+          <div class="data-wrapper">
+            <div class="data-name">{{ data }}</div>
+            <div class="data-label">{{dataTypes[data]}}</div>
+            <input type="text" v-model="dataToShow[data]" />
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -34,25 +45,15 @@ export default {
       dataToPass: {},
       propsToShow: {},
       dataToShow: {},
-      propsTypes: {},
+      propTypes: {},
       dataTypes: {},
-      show: true,
-      dataN: null,
     };
   },
-  beforeMount() {
-    var instance = new ComponentClass({
-      data: function() {
-        return {
-          
-        }
-      },
-    });
-    console.log(instance)
+  created() {
 
     Object.keys(Lol.props).forEach((element) => {
-      this.propsToPass[element] = null;
-      this.propsToShow[element] = null;
+      this.propsToPass[element] = Lol.props[element].default;
+      this.propsToShow[element] = Lol.props[element].default;
     });
 
     Object.keys(Lol.data()).forEach((element) => {
@@ -62,14 +63,14 @@ export default {
           ? exts.objToInput(Lol.data()[element])
           : Lol.data()[element];
     });
-  },
-  mounted() {
-    Object.keys(Lol.props).forEach((element) => {
-      this.propsTypes[element] = typeof Lol.props[element].type();
+     Object.keys(Lol.props).forEach((element) => {
+      this.propTypes[element] = typeof Lol.props[element].type();
     });
     Object.keys(Lol.data()).forEach((element) => {
       this.dataTypes[element] = typeof Lol.data()[element];
     });
+  },
+  mounted() {
     this.lol();
   },
 
@@ -106,33 +107,16 @@ export default {
 
 
       instance.$mount("#lol"); 
-      // this.$forceUpdate();
     },
     checkDataAndPropType() {
-            let vm = this;
-
       Object.keys(this.dataToPass).forEach((element) => {
-        console.log(vm.dataToPass[element]);
-        console.log(vm.dataToShow[element]);
-        vm.dataToPass[element] = null;
-        console.log(vm.dataToPass[element]);
-
-        var temp = exts[vm.dataTypes[element]](vm.dataToShow[element]);
-
-        console.log();
-
-        vm.dataToPass[element] = temp;
-
-        console.log("--------");
-        console.log(vm.dataToPass[element]);
-        console.log(vm.dataToShow[element]);
+        this.dataToPass[element] = exts[this.dataTypes[element]](this.dataToShow[element]);
       });
       Object.keys(this.propsToPass).forEach((element) => {
-        this.propsToPass[element] = exts[this.propsTypes[element]](
+        this.propsToPass[element] = exts[this.propTypes[element]](
           this.propsToShow[element]
         );
       });
-      // console.log(this.dataToPass, this.dataToShow);
     },
   },
 };
@@ -146,5 +130,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+ 
+.list-item {
+  list-style: none;
 }
 </style>

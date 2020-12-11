@@ -10,7 +10,7 @@
           <div class="prop-wrapper">
             <div class="prop-name">{{ prop }}</div>
             <div class="prop-label">{{propTypes[prop]}}</div>
-            <input type="text" v-model="propsToShow[prop]" />
+            <input type="text" :readonly="propTypes[prop]=='function'" v-model="propsToShow[prop]" />
           </div>
         </li>
       </ul>
@@ -22,7 +22,7 @@
           <div class="data-wrapper">
             <div class="data-name">{{ data }}</div>
             <div class="data-label">{{dataTypes[data]}}</div>
-            <input type="text" v-model="dataToShow[data]" />
+            <input type="text" :readonly="dataTypes[data]=='function'" v-model="dataToShow[data]" />
           </div>
         </li>
       </ul>
@@ -53,7 +53,9 @@ export default {
 
     Object.keys(Lol.props).forEach((element) => {
       this.propsToPass[element] = Lol.props[element].default;
-      this.propsToShow[element] = Lol.props[element].default;
+      this.propsToShow[element] = typeof Lol.props[element].default === "object"
+      ? exts.objToInput(Lol.props[element].default)
+          : Lol.props[element].default;
     });
 
     Object.keys(Lol.data()).forEach((element) => {

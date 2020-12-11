@@ -12,6 +12,9 @@
     <div>
       {{ bo }}
     </div>
+    <div>
+      {{ obj }}
+    </div>
   </div>
 </template>
 
@@ -32,7 +35,11 @@ export default {
       type: String,
       default: 'loooooool'
     },
-    bo: Boolean
+    bo: Boolean,
+    obj: {
+      type: Function, 
+      default: () => ({l: 894032, m: 348329})
+    }
   },
   methods: {
     lol() {
